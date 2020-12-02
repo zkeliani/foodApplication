@@ -1,0 +1,216 @@
+.text-large {
+  font-size: 10vh;
+}
+
+.text-splash-title {
+  font-size: 2.5vh;
+}
+
+.text-splash-subtitle {
+  font-size: 2vh;
+}
+
+.text-title {
+  transform: translateY(-25vh);
+}
+
+.modal-shift {
+  transform: translateY(25vh);
+}
+
+.this-is-hidden {
+  display: none;
+}
+
+.changeme{ 
+  background-color: hsl(0, 0%, 21%);
+  padding-top: 0.75em;
+  padding-bottom: 0.75em;
+  color: #fff
+}
+
+.menu {
+  font-size: 1rem;
+}
+
+.menu.is-small {
+  font-size: 0.75rem;
+}
+
+.menu.is-medium {
+  font-size: 1.25rem;
+}
+
+.menu.is-large {
+  font-size: 1.5rem;
+}
+
+.menu-list {
+  line-height: 1.25;
+}
+
+.menu-list a {
+  border-radius: 2px;
+  color: hsl(0, 0%, 21%);
+  display: block;
+  padding: 0.5em 0.75em;
+}
+
+.menu-list a:hover {
+  background-color:  #d2f9de;
+  color: #0e301a;
+}
+
+.menu-list a.is-active {
+  background-color: hsl(141, 71%, 48%);
+  color: #fff;
+}
+
+.menu-list li ul {
+  border-left: 1px solid hsl(0, 0%, 21%);
+  margin: 0.75em;
+  padding-left: 0.75em;
+}
+
+.menu-label {
+  color: #fff;
+  font-size: 0.75em;
+  letter-spacing: 0.1em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.menu-label:not(:first-child) {
+  margin-top: 1em;
+}
+
+.menu-label:not(:last-child) {
+  margin-bottom: 1em;
+}
+
+.move-left {
+  left:30%
+}
+
+@import "compass/css3";
+.image {
+  width: 250px;
+  float: left;
+  margin: 20px;
+}
+body2 {
+  font-size: small;
+  line-height: 1.4;
+}
+p2 {
+  margin: 0;
+}
+
+.nutritionInput {
+  width:33%;
+  border: 0px;
+  text-align:right;
+  font-size: 0.9rem;
+}
+
+.nutritionInputCals {
+  width:21%;
+  border: 0px;
+  font-size: 0.9rem;
+}
+
+.performance-facts {
+  border: 1px solid black;
+  margin: 20px;
+  float: left;
+  width: 320px;
+  padding: 0.5rem;
+}
+
+.performance-facts.xl {
+  border: 1px solid black;
+  margin: 0px;
+  float: left;
+  width: 350px;
+  padding: 0.5rem;
+}
+.performance-facts table {
+  border-collapse: collapse;
+}
+.performance-facts__title {
+  font-weight: bold;
+  font-size: 2rem;
+  margin: 0 0 0.25rem 0;
+}
+.performance-facts__header {
+  border-bottom: 10px solid black;
+  padding: 0 0 0.25rem 0;
+  margin: 0 0 0.5rem 0;
+}
+.performance-facts__header p {
+  margin: 0;
+}
+.performance-facts__table, .performance-facts__table--small, .performance-facts__table--grid {
+  width: 100%;
+}
+.performance-facts__table thead tr th, .performance-facts__table--small thead tr th, .performance-facts__table--grid thead tr th, .performance-facts__table thead tr td, .performance-facts__table--small thead tr td, .performance-facts__table--grid thead tr td {
+  border: 0;
+}
+.performance-facts__table th, .performance-facts__table--small th, .performance-facts__table--grid th, .performance-facts__table td, .performance-facts__table--small td, .performance-facts__table--grid td {
+  font-weight: normal;
+  text-align: left;
+  padding: 0.25rem 0;
+  border-top: 1px solid black;
+  white-space: nowrap;
+}
+.performance-facts__table td:last-child, .performance-facts__table--small td:last-child, .performance-facts__table--grid td:last-child {
+  text-align: right;
+}
+.performance-facts__table .blank-cell, .performance-facts__table--small .blank-cell, .performance-facts__table--grid .blank-cell {
+  width: 1rem;
+  border-top: 0;
+}
+.performance-facts__table .thick-row th, .performance-facts__table--small .thick-row th, .performance-facts__table--grid .thick-row th, .performance-facts__table .thick-row td, .performance-facts__table--small .thick-row td, .performance-facts__table--grid .thick-row td {
+  border-top-width: 5px;
+}
+.small-info {
+  font-size: 0.7rem;
+}
+.performance-facts__table--small {
+  border-bottom: 1px solid #999;
+  margin: 0 0 0.5rem 0;
+}
+.performance-facts__table--small thead tr {
+  border-bottom: 1px solid black;
+}
+.performance-facts__table--small td:last-child {
+  text-align: left;
+}
+.performance-facts__table--small th, .performance-facts__table--small td {
+  border: 0;
+  padding: 0;
+}
+.performance-facts__table--grid {
+  margin: 0 0 0.5rem 0;
+}
+.performance-facts__table--grid td:last-child {
+  text-align: left;
+}
+.performance-facts__table--grid td:last-child::before {
+  content: "•";
+  font-weight: bold;
+  margin: 0 0.25rem 0 0;
+}
+.text-center {
+  text-align: center;
+}
+.font-black{
+  color: black;
+}
+.thick-end {
+  border-bottom: 10px solid black;
+}
+.thin-end {
+  border-bottom: 1px solid black;
+}
+

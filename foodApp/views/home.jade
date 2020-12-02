@@ -1,0 +1,1312 @@
+extends layout
+
+block content
+    section.hero.is-success
+        div.hero-body
+            div.container
+            h1.title Welcome, #{params.user}
+
+
+    div.columns
+        div.column.is-one-quarter
+            aside.menu
+            .changeme
+                p.menu-label Browse Our Database
+            ul.menu-list
+                li
+                    a#pmbtn(onclick='PremadeFood()') Premade Food
+                li
+                    a#rbtn(onclick='Recipes()') Recipes
+                li
+                    a#ibtn(onclick='Ingredients()') Ingredients
+                li
+                    a#abtn(onclick='Advanced()') Advanced Search
+            .changeme
+                p.menu-label Calculate Your Nutrition
+            ul.menu-list
+                li
+                    a#cbtn(onclick='Calculator()')  Calculator
+            .changeme
+                p.menu-label User Info
+            ul.menu-list
+                li
+                    a.is-active#probtn My Profile
+                    ul
+                        li
+                            a.is-active#lbtn(onclick='Like()') Foods I Like/Love
+            //- .changeme
+            //-     p.menu-label Contribute to Our Database
+            //- ul.menu-list
+            //-     li
+            //-         a Submit a Premade Food
+            //-     li
+            //-         a Submit a New Recipe
+
+        div.column
+            div#likes
+              article.message.is-success
+                  .message-body
+                      | Welcome to your profile, #{params.user}! 
+                      strong You will find foods you have saved below!      
+              section.hero
+                .hero-body
+                  .container
+                    h1.title
+                      | Like
+                    h2.subtitle
+                      | You Like these Foods
+              table.table.is-fullwidth.is-hoverable.is-striped#lTable
+                tbody
+                    tr.header
+                        th Name
+                    each food in params.userSaved.premade_likes
+                        tr(onclick='OpenInfo(#{food.food_ID},1)')
+                            td=food.food_name
+                    each food in params.userSaved.homemade_likes
+                        tr(onclick='OpenInfo(#{food.food_ID},2)')
+                            td=food.food_name
+        
+              section.hero
+                .hero-body
+                  .container
+                    h1.title
+                      | Love
+                    h2.subtitle
+                      | You Love these Foods
+              table.table.is-fullwidth.is-hoverable.is-striped#lTable
+                tbody
+                    tr.header
+                        th Name
+                    each food in params.userSaved.premade_fav
+                        tr(onclick='OpenInfo(#{food.food_ID},1)')
+                            td=food.food_name
+                    each food in params.userSaved.homemade_fav
+                        tr(onclick='OpenInfo(#{food.food_ID},2)')
+                            td=food.food_name
+
+            div.this-is-hidden#premadefood
+                article.message.is-success
+                    .message-body
+                        | Here you will find every premade food option that is in our database.
+                        strong  Selecting an entry will bring up the nutritional information for that food.
+                        |   All nutritional information is provided
+                        a by the manufacturer,
+                        |  for your convenince.  If you know what you're looking for,
+                        em you can even search the database with the searchbar below
+                div
+                    .control.has-icons-left.is-large.is-loading#pSearchController
+                        input.input.is-large.is-fullwidth#pInput(type='text', onkeyup='myFunction(1)', placeholder='Search for premade options')
+                        span.icon.is-medium.is-left
+                            i.fas.fa-search
+                        table.table.is-fullwidth.is-hoverable.is-striped#pTable
+                            tbody
+                                tr.header
+                                    th Name
+                                    th Manufacturer
+                                each food in params.pmDB
+                                    tr(onclick='OpenInfo(#{food.food_ID},1)')
+                                        td=food.food_name
+                                        td=food.manufacturer_name
+
+            div.this-is-hidden#calculator
+                article.message.is-success
+                  .message-body
+                      | Here you can get a nutrition block tailored to you!
+                      strong  Select all the food you had today from the selection prompt below.
+                div.columns
+                  div.column  
+                    section.performance-facts.xl
+                          header.performance-facts__header
+                            h1.performance-facts__title Nutrition Facts
+                          table.performance-facts__table
+                            thead
+                              tr
+                                th.small-info(colspan='3')
+                                  | Amount Per Serving
+                            tbody
+                              tr
+                                th(colspan='2')
+                                  b Calories
+                                  |           
+                                  a.font-black#cals
+                                td
+                                  | Calories from Fat
+                                  |        
+                                  a.font-black#fatCals
+                              tr.thick-row
+                                td.small-info(colspan='3')
+                                  b % Daily Value*
+                              tr
+                                th(colspan='2')
+                                  b Total Fat
+                                  |          
+                                  a.font-black#totalFat
+                                  a.font-black g
+                                td
+                              tr
+                                td.blank-cell
+                                th
+                                  | Saturated Fat
+                                  | 
+                                  a.font-black#satFat
+                                  a.font-black g
+                                td
+                              tr
+                                td.blank-cell
+                                th
+                                  | Trans Fat
+                                  | 
+                                  a.font-black#transFat
+                                  a.font-black g
+                                td
+                              tr
+                                th(colspan='2')
+                                  b Cholesterol
+                                  |           
+                                  a.font-black#cholesterol 
+                                  a.font-black mg
+                                td
+                              tr
+                                th(colspan='2')
+                                  b Sodium
+                                  |           
+                                  a.font-black#sodium
+                                  a.font-black mg
+                                td
+                              tr
+                                th(colspan='2')
+                                  b Total Carbohydrate
+                                  |           
+                                  a.font-black#totalCarbs
+                                  a.font-black g
+                                td
+                              tr
+                                td.blank-cell
+                                th
+                                  | Dietary Fiber
+                                  | 
+                                  a.font-black#dietFiber
+                                  a.font-black g
+                                td
+                              tr
+                                td.blank-cell
+                                th
+                                  | Sugars
+                                  | 
+                                  a.font-black#sugars
+                                  a.font-black g
+                                td
+                              tr.thick-end
+                                th(colspan='2')
+                                  b Protein
+                                  |           
+                                  a.font-black#protein
+                                  a.font-black g
+                                td
+                          table.performance-facts__table--grid
+                            tbody
+                              tr
+                                td(colspan='2')
+                                  | Vitamin A
+                                  | N/A
+                                td
+                                  | Vitamin C
+                                  | N/A
+                              tr.thin-end
+                                td(colspan='2')
+                                  | Calcium
+                                  | N/A
+                                td
+                                  | Iron
+                                  | N/A
+                          p2.small-info
+                            | * Percent Daily Values are based on a 2,000 calorie diet. Your daily values may be higher or lower depending on your calorie needs:
+                          table.performance-facts__table--small.small-info
+                            thead
+                              tr
+                                td(colspan='2')
+                                th Calories:
+                                th 2,000
+                                th 2,500
+                            tbody
+                              tr
+                                th(colspan='2') Total Fat
+                                td Less than
+                                td 65g
+                                td 80g
+                              tr
+                                td.blank-cell
+                                th Saturated Fat
+                                td Less than
+                                td 20g
+                                td 25g
+                              tr
+                                th(colspan='2') Cholesterol
+                                td Less than
+                                td 300mg
+                                td 300 mg
+                              tr
+                                th(colspan='2') Sodium
+                                td Less than
+                                td 2,400mg
+                                td 2,400mg
+                              tr
+                                th(colspan='3') Total Carbohydrate
+                                td 300g
+                                td 375g
+                              tr
+                                td.blank-cell
+                                th(colspan='2') Dietary Fiber
+                                td 25g
+                                td 30g
+                          p2.small-info
+                            | Calories per gram:
+                          p2.small-info.text-center
+                            | Fat 9
+                            | •
+                            | Carbohydrate 4
+                            | •
+                            | Protein 4
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+
+                  div.column
+                    .control.has-icons-left.is-large.is-loading#cSearchController
+                        input.input.is-large.is-fullwidth#cInput(type='text', onkeyup='myFunction(4)', placeholder='Search all foods')
+                        span.icon.is-medium.is-left
+                            i.fas.fa-search
+                    .select.is-multiple.is-fullwidth
+                      select#cSelect(multiple='', size='8' onchange="NutritionCalc()")
+                        each item in params.pmDB
+                          option(value="p" + item.food_ID) #{item.food_name}
+                        each item in params.hfDB
+                          option(value="h" + item.food_ID) #{item.food_name}
+
+            div.this-is-hidden#recipes
+                article.message.is-success
+                    .message-body
+                        | Here you will find every recipe that is in our database.
+                        strong  Selecting an entry will bring up the nutritional information for that recipe.
+                        |   All nutritional information is derived
+                        a from the sum of the ingredients,
+                        |  for your convenince.  If you know what you're looking for,
+                        em you can even search the database with the searchbar below
+                div
+                    .control.has-icons-left.is-large.is-loading#rSearchController
+                        input.input.is-large.is-fullwidth#rInput(type='text', onkeyup='myFunction(2)', placeholder='Search for recipes')
+                        span.icon.is-medium.is-left
+                            i.fas.fa-search
+                        table.table.is-fullwidth.is-hoverable.is-striped#rTable
+                            tbody
+                                tr.header
+                                    th Name
+                                each food in params.hfDB
+                                    tr
+                                        td(onclick='OpenInfo(#{food.food_ID},2)')= food.food_name
+
+            div.this-is-hidden#ingredients
+                article.message.is-success
+                    .message-body
+                        | Here you will find every ingredient that is used in a recipe on our database.
+                        strong  Selecting an entry will bring up the nutritional information for that ingredient.
+                        |   All ingredient nutritional information is calculated
+                        a by the gram,
+                        |  for your convenince.  If you know what you're looking for,
+                        em you can even search the database with the searchbar below
+                div
+                    .control.has-icons-left.is-large.is-loading#iSearchController
+                        input.input.is-large.is-fullwidth#iInput(type='text', onkeyup='myFunction(3)', placeholder='Search for ingredients')
+                        span.icon.is-medium.is-left
+                            i.fas.fa-search
+                        table.table.is-fullwidth.is-hoverable.is-striped#iTable
+                            tbody
+                                tr.header
+                                    th Name
+                                each food in params.iDB
+                                    tr(onclick='OpenInfo(#{food.ingredient_ID},3)')
+                                        td=food.ingredient_name
+
+
+            div.this-is-hidden#advanced
+                article.message.is-success
+                    .message-body
+                        strong  Welcome to Advanced Search!
+                        |   Any query imaginable can be able to be performed here
+                div.columns
+                    div.column
+                        button.button.is-dark.is-fullwidth.is-large#aPMButton(onclick='SwapAdv(0)') Premade Food
+                    div.column
+                        button.button.is-dark.is-fullwidth.is-large.is-outlined#aHFButton(onclick='SwapAdv(1)') Recipes
+
+
+                .columns
+                  .column
+                    article.message.is-warning
+                      .message-body
+                          strong  Enter the values you want.  A "<" or ">" is supported in front of a number and represents a less than or greater than respectively.  No operation indicates an exact amount.
+                    section.performance-facts.xl
+                          header.performance-facts__header
+                            h1.performance-facts__title Nutrition Facts
+                          table.performance-facts__table
+                            thead
+                              tr
+                                th.small-info(colspan='3')
+                                  | Amount Per Serving
+                            tbody
+                              tr
+                                th(colspan='2')
+                                  b Calories
+                                  |           
+                                  input.nutritionInputCals#aCalsInput
+                                td
+                                  | Calories from Fat
+                                  |        
+                                  input.nutritionInputCals#aFatCalsInput
+                              tr.thick-row
+                                td.small-info(colspan='3')
+                                  b % Daily Value*
+                              tr
+                                th(colspan='2')
+                                  b Total Fat
+                                  |          
+                                  input.nutritionInput#aTotalFatInput
+                                  a.font-black g
+                                td
+                              tr
+                                td.blank-cell
+                                th
+                                  | Saturated Fat
+                                  | 
+                                  input.nutritionInput#aSatFatInput
+                                  a.font-black g
+                                td
+                              tr
+                                td.blank-cell
+                                th
+                                  | Trans Fat
+                                  | 
+                                  input.nutritionInput#aTransFatInput
+                                  a.font-black g
+                                td
+                              tr
+                                th(colspan='2')
+                                  b Cholesterol
+                                  |           
+                                  input.nutritionInput#aCholesterolInput 
+                                  a.font-black mg
+                                td
+                              tr
+                                th(colspan='2')
+                                  b Sodium
+                                  |           
+                                  input.nutritionInput#aSodiumInput
+                                  a.font-black mg
+                                td
+                              tr
+                                th(colspan='2')
+                                  b Total Carbohydrate
+                                  |           
+                                  input.nutritionInput#aCarbsInput
+                                  a.font-black g
+                                td
+                              tr
+                                td.blank-cell
+                                th
+                                  | Dietary Fiber
+                                  | 
+                                  input.nutritionInput#aFiberInput
+                                  a.font-black g
+                                td
+                              tr
+                                td.blank-cell
+                                th
+                                  | Sugars
+                                  | 
+                                  input.nutritionInput#aSugarsInput
+                                  a.font-black g
+                                td
+                              tr.thick-end
+                                th(colspan='2')
+                                  b Protein
+                                  |           
+                                  input.nutritionInput#aProteinInput
+                                  a.font-black g
+                                td
+                          table.performance-facts__table--grid
+                            tbody
+                              tr
+                                td(colspan='2')
+                                  | Vitamin A
+                                  | N/A
+                                td
+                                  | Vitamin C
+                                  | N/A
+                              tr.thin-end
+                                td(colspan='2')
+                                  | Calcium
+                                  | N/A
+                                td
+                                  | Iron
+                                  | N/A
+                          p2.small-info
+                            | * Percent Daily Values are based on a 2,000 calorie diet. Your daily values may be higher or lower depending on your calorie needs:
+                          table.performance-facts__table--small.small-info
+                            thead
+                              tr
+                                td(colspan='2')
+                                th Calories:
+                                th 2,000
+                                th 2,500
+                            tbody
+                              tr
+                                th(colspan='2') Total Fat
+                                td Less than
+                                td 65g
+                                td 80g
+                              tr
+                                td.blank-cell
+                                th Saturated Fat
+                                td Less than
+                                td 20g
+                                td 25g
+                              tr
+                                th(colspan='2') Cholesterol
+                                td Less than
+                                td 300mg
+                                td 300 mg
+                              tr
+                                th(colspan='2') Sodium
+                                td Less than
+                                td 2,400mg
+                                td 2,400mg
+                              tr
+                                th(colspan='3') Total Carbohydrate
+                                td 300g
+                                td 375g
+                              tr
+                                td.blank-cell
+                                th(colspan='2') Dietary Fiber
+                                td 25g
+                                td 30g
+                          p2.small-info
+                            | Calories per gram:
+                          p2.small-info.text-center
+                            | Fat 9
+                            | •
+                            | Carbohydrate 4
+                            | •
+                            | Protein 4
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+
+                  div.column.this-is-hidden#ingColumn
+                    article.message.is-info
+                      .message-body
+                          strong  Want a dish of all veggies?  Go for it!  Select any particuarlar ingredients you want to ensure are in your dish:
+                    .select.is-multiple.is-fullwidth
+                      select#aIngredients(multiple='', size='8')
+                        each item in params.iDB
+                          option(value=item.ingredient_name) #{item.ingredient_name}
+            
+                  div.column#manColumn
+                    article.message.is-info
+                      .message-body
+                          strong  Dont want to give McDonald's money?  Good for you!  Select any manufacturer you desire:
+                    .select.is-multiple.is-fullwidth
+                      select#aManufacturers(multiple='', size='8')
+                        each item in params.man
+                          option(value=item.manufacturer_name) #{item.manufacturer_name}
+
+                  div.column
+                    article.message.is-danger
+                      .message-body
+                          strong  Got allergy problems?  No problem!  Select all allergens you want to explicitly exclude from your dish:  
+                    .select.is-multiple.is-fullwidth
+                      select#aAllergens(multiple='', size='8')
+                        each item in params.all
+                          option(value=item.allergen_name) #{item.allergen_name}
+                  
+                  div.column.is-vertical-center
+                    article.message.is-primary
+                      .message-body
+                          strong  Picky eater?  Fine by us, just select the types of foods you are actually willing to eat from the list below:
+                    .select.is-multiple.is-fullwidth
+                      select#aCategories(multiple='', size='8')
+                        each item in params.cat
+                          option(value=item) #{item}
+
+                div.columns
+                  div.column
+                      button.button.is-success.is-fullwidth.is-large#queryBtnP(onclick='SuperQuery()') Submit
+
+                table.table.is-fullwidth.is-hoverable.is-striped#pTable2
+                    tbody
+                        tr.header
+                            th Name
+                        each food in params.pmDB
+                            tr(onclick='OpenInfo(#{food.food_ID},1)')
+                                td=food.food_name
+                                td.this-is-hidden=food.food_ID
+                                td=food.manufacturer_name
+
+                table.table.is-fullwidth.is-hoverable.is-striped.this-is-hidden#rTable2
+                    tbody
+                        tr.header
+                            th Name
+                        each food in params.hfDB
+                            tr(onclick='OpenInfo(#{food.food_ID},2)')
+                                td=food.food_name
+                                td.this-is-hidden=food.food_ID
+
+
+
+            each food in params.pmDB
+              - var total_fatDV = ((food.total_fat * food.serving_size / 65) * 100).toFixed(0) + ' %'
+              - var sat_fatDV = (((food.sat_fat + food.trans_fat) * food.serving_size / 20) * 100).toFixed(0) + ' %'
+              - var cholesterolDV = ((food.cholesterol * food.serving_size / 300) * 100).toFixed(0) + ' %'
+              - var sodiumDV = ((food.sodium * food.serving_size / 2400) * 100).toFixed(0) + ' %'
+              - var total_carbsDV = ((food.total_carbs * food.serving_size / 300) * 100).toFixed(0) + ' %'
+              - var diet_fiberDV = ((food.diet_fiber * food.serving_size / 25) * 100).toFixed(0) + ' %'
+              .modal(id="pm#{food.food_ID}")
+                .modal-background
+                .modal-card
+                  header.modal-card-head
+                    p2.modal-card-title #{food.food_name} 
+                    p2 made by #{food.manufacturer_name}
+                    button.delete(onclick='CloseInfo(#{food.food_ID},1)')
+                  .modal-card-body
+                    section.performance-facts.xl
+                      header.performance-facts__header
+                        h1.performance-facts__title Nutrition Facts
+                        p2
+                          | Serving Size #{food.serving_size}g &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        p2 Serving Per Container #{food.servings}
+                      table.performance-facts__table
+                        thead
+                          tr
+                            th.small-info(colspan='3')
+                              | Amount Per Serving
+                        tbody
+                          tr
+                            th(colspan='2')
+                              b Calories
+                              |           
+                              a.font-black=(food.calories * food.serving_size).toFixed(0)
+                            td
+                              | Calories from Fat
+                              | 
+                              a.font-black=(food.fat_calories * food.serving_size).toFixed(0)
+                          tr.thick-row
+                            td.small-info(colspan='3')
+                              b % Daily Value*
+                          tr
+                            th(colspan='2')
+                              b Total Fat
+                              |          
+                              a.font-black=(food.total_fat * food.serving_size).toFixed(0)
+                              a.font-black g
+                            td
+                              b=total_fatDV
+                          tr
+                            td.blank-cell
+                            th
+                              | Saturated Fat
+                              | 
+                              a.font-black=(food.sat_fat * food.serving_size).toFixed(0)
+                              a.font-black g
+                            td
+                              b=sat_fatDV
+                          tr
+                            td.blank-cell
+                            th
+                              | Trans Fat
+                              | 
+                              a.font-black=(food.trans_fat * food.serving_size).toFixed(0)
+                              a.font-black g
+                            td
+                          tr
+                            th(colspan='2')
+                              b Cholesterol
+                              |           
+                              a.font-black=(food.cholesterol * food.serving_size).toFixed(0)
+                              a.font-black mg
+                            td
+                              b=cholesterolDV
+                          tr
+                            th(colspan='2')
+                              b Sodium
+                              |           
+                              a.font-black=(food.sodium * food.serving_size).toFixed(0)
+                              a.font-black mg
+                            td
+                              b=sodiumDV
+                          tr
+                            th(colspan='2')
+                              b Total Carbohydrate
+                              |           
+                              a.font-black=(food.total_carbs * food.serving_size).toFixed(0)
+                              a.font-black g
+                            td
+                              b=total_carbsDV
+                          tr
+                            td.blank-cell
+                            th
+                              | Dietary Fiber
+                              | 
+                              a.font-black=(food.diet_fiber * food.serving_size).toFixed(0)
+                              a.font-black g
+                            td
+                              b=diet_fiberDV
+                          tr
+                            td.blank-cell
+                            th
+                              | Sugars
+                              | 
+                              a.font-black=(food.sugars * food.serving_size).toFixed(0)
+                              a.font-black g
+                            td
+                          tr.thick-end
+                            th(colspan='2')
+                              b Protein
+                              |           
+                              a.font-black=(food.protein * food.serving_size).toFixed(0)
+                              a.font-black g
+                            td
+                      table.performance-facts__table--grid
+                        tbody
+                          tr
+                            td(colspan='2')
+                              | Vitamin A
+                              | N/A
+                            td
+                              | Vitamin C
+                              | N/A
+                          tr.thin-end
+                            td(colspan='2')
+                              | Calcium
+                              | N/A
+                            td
+                              | Iron
+                              | N/A
+                      p2.small-info
+                        | * Percent Daily Values are based on a 2,000 calorie diet. Your daily values may be higher or lower depending on your calorie needs:
+                      table.performance-facts__table--small.small-info
+                        thead
+                          tr
+                            td(colspan='2')
+                            th Calories:
+                            th 2,000
+                            th 2,500
+                        tbody
+                          tr
+                            th(colspan='2') Total Fat
+                            td Less than
+                            td 65g
+                            td 80g
+                          tr
+                            td.blank-cell
+                            th Saturated Fat
+                            td Less than
+                            td 20g
+                            td 25g
+                          tr
+                            th(colspan='2') Cholesterol
+                            td Less than
+                            td 300mg
+                            td 300 mg
+                          tr
+                            th(colspan='2') Sodium
+                            td Less than
+                            td 2,400mg
+                            td 2,400mg
+                          tr
+                            th(colspan='3') Total Carbohydrate
+                            td 300g
+                            td 375g
+                          tr
+                            td.blank-cell
+                            th(colspan='2') Dietary Fiber
+                            td 25g
+                            td 30g
+                      p2.small-info
+                        | Calories per gram:
+                      p2.small-info.text-center
+                        | Fat 9
+                        | •
+                        | Carbohydrate 4
+                        | •
+                        | Protein 4
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    article.message.is-danger.is-fullwidth
+                      .message-body
+                          strong  Be careful! #{food.food_name} contains the following allergens:
+                    table.table.is-fullwidth.is-hoverable.is-striped#rTable
+                      tbody
+                          tr.header
+                              th Allergen
+                          each allergen in food.containsAllergens
+                              tr
+                                  td=allergen
+                  footer.modal-card-foot
+                    a.button.is-large.is-fullwidth.is-danger(onclick='LikeLoveIt(\'' + params.user + '\', #{food.food_ID}, 3)')
+                      span.icon.is-medium
+                        i.far.fa-heart
+                      span Love it!
+                    a.button.is-large.is-fullwidth.is-success(onclick='LikeLoveIt(\'' + params.user + '\', #{food.food_ID}, 1)')
+                      span.icon.is-medium
+                        i.far.fa-smile
+                      span Like it!
+
+
+            each food in params.hfDB
+              - var total_fatDV = ((food.total_fat / 65) * 100).toFixed(0) + ' %'
+              - var sat_fatDV = (((food.sat_fat + food.trans_fat) / 20) * 100).toFixed(0) + ' %'
+              - var cholesterolDV = ((food.cholesterol / 300) * 100).toFixed(0) + ' %'
+              - var sodiumDV = ((food.sodium / 2400) * 100).toFixed(0) + ' %'
+              - var total_carbsDV = ((food.total_carbs / 300) * 100).toFixed(0) + ' %'
+              - var diet_fiberDV = ((food.diet_fiber / 25) * 100).toFixed(0) + ' %'
+              .modal(id="hf#{food.food_ID}")
+                .modal-background
+                .modal-card
+                  header.modal-card-head
+                    p2.modal-card-title #{food.food_name}
+                    button.delete(onclick='CloseInfo(#{food.food_ID},2)')
+                  .modal-card-body
+                    section.performance-facts.xl
+                      header.performance-facts__header
+                        h1.performance-facts__title Nutrition Facts
+                        p2
+                          | Serving Size #{food.serving_size}g &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        p2 Serving Per Container #{food.servings}
+                      table.performance-facts__table
+                        thead
+                          tr
+                            th.small-info(colspan='3')
+                              | Amount Per Serving
+                        tbody
+                          tr
+                            th(colspan='2')
+                              b Calories
+                              |           
+                              a.font-black=food.calories
+                            td
+                              | Calories from Fat
+                              | 
+                              a.font-black=food.fat_calories
+                          tr.thick-row
+                            td.small-info(colspan='3')
+                              b % Daily Value*
+                          tr
+                            th(colspan='2')
+                              b Total Fat
+                              |          
+                              a.font-black=food.total_fat
+                              a.font-black g
+                            td
+                              b=total_fatDV
+                          tr
+                            td.blank-cell
+                            th
+                              | Saturated Fat
+                              | 
+                              a.font-black=food.sat_fat
+                              a.font-black g
+                            td
+                              b=sat_fatDV
+                          tr
+                            td.blank-cell
+                            th
+                              | Trans Fat
+                              | 
+                              a.font-black=food.trans_fat
+                              a.font-black g
+                            td
+                          tr
+                            th(colspan='2')
+                              b Cholesterol
+                              |           
+                              a.font-black=food.cholesterol
+                              a.font-black mg
+                            td
+                              b=cholesterolDV
+                          tr
+                            th(colspan='2')
+                              b Sodium
+                              |           
+                              a.font-black=food.sodium
+                              a.font-black mg
+                            td
+                              b=sodiumDV
+                          tr
+                            th(colspan='2')
+                              b Total Carbohydrate
+                              |           
+                              a.font-black=food.total_carbs
+                              a.font-black g
+                            td
+                              b=total_carbsDV
+                          tr
+                            td.blank-cell
+                            th
+                              | Dietary Fiber
+                              | 
+                              a.font-black=food.diet_fiber
+                              a.font-black g
+                            td
+                              b=diet_fiberDV
+                          tr
+                            td.blank-cell
+                            th
+                              | Sugars
+                              | 
+                              a.font-black=food.sugars
+                              a.font-black g
+                            td
+                          tr.thick-end
+                            th(colspan='2')
+                              b Protein
+                              |           
+                              a.font-black=food.protein
+                              a.font-black g
+                            td
+                      table.performance-facts__table--grid
+                        tbody
+                          tr
+                            td(colspan='2')
+                              | Vitamin A
+                              | N/A
+                            td
+                              | Vitamin C
+                              | N/A
+                          tr.thin-end
+                            td(colspan='2')
+                              | Calcium
+                              | N/A
+                            td
+                              | Iron
+                              | N/A
+                      p2.small-info
+                        | * Percent Daily Values are based on a 2,000 calorie diet. Your daily values may be higher or lower depending on your calorie needs:
+                      table.performance-facts__table--small.small-info
+                        thead
+                          tr
+                            td(colspan='2')
+                            th Calories:
+                            th 2,000
+                            th 2,500
+                        tbody
+                          tr
+                            th(colspan='2') Total Fat
+                            td Less than
+                            td 65g
+                            td 80g
+                          tr
+                            td.blank-cell
+                            th Saturated Fat
+                            td Less than
+                            td 20g
+                            td 25g
+                          tr
+                            th(colspan='2') Cholesterol
+                            td Less than
+                            td 300mg
+                            td 300 mg
+                          tr
+                            th(colspan='2') Sodium
+                            td Less than
+                            td 2,400mg
+                            td 2,400mg
+                          tr
+                            th(colspan='3') Total Carbohydrate
+                            td 300g
+                            td 375g
+                          tr
+                            td.blank-cell
+                            th(colspan='2') Dietary Fiber
+                            td 25g
+                            td 30g
+                      p2.small-info
+                        | Calories per gram:
+                      p2.small-info.text-center
+                        | Fat 9
+                        | •
+                        | Carbohydrate 4
+                        | •
+                        | Protein 4
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    article.message.is-info
+                      .message-body
+                          strong  #{food.food_name} contains the following ingredients:
+                    table.table.is-fullwidth.is-hoverable.is-striped#rTable
+                      tbody
+                          tr.header
+                              th Ingredient
+                              th Amount
+                          each ingredient in food.ingredients
+                              tr
+                                  td=ingredient.ingredient_name
+                                  td=ingredient.measurement
+                    article.message.is-danger
+                      .message-body
+                          strong  Be careful! #{food.food_name} contains the following allergens:
+                    table.table.is-fullwidth.is-hoverable.is-striped#rTable
+                      tbody
+                          tr.header
+                              th Allergen
+                          each allergen in food.containsAllergens
+                              tr
+                                  td=allergen
+                  footer.modal-card-foot
+                    a.button.is-large.is-fullwidth.is-danger(onclick='LikeLoveIt("#{params.user}", #{food.food_ID}, 4)')
+                      span.icon.is-medium
+                        i.far.fa-heart
+                      span Love it!
+                    a.button.is-large.is-fullwidth.is-success(onclick="LikeLoveIt('#{params.user}', #{food.food_ID}, 2)")
+                      span.icon.is-medium
+                        i.far.fa-smile
+                      span Like it!
+
+            each food in params.iDB
+              - var total_fatDV = ((food.total_fat_i / 65) * 100).toFixed(0) + ' %'
+              - var sat_fatDV = (((food.sat_fat_i + food.trans_fat_i) / 20) * 100).toFixed(0) + ' %'
+              - var cholesterolDV = ((food.cholesterol_i / 300) * 100).toFixed(0) + ' %'
+              - var sodiumDV = ((food.sodium_i / 2400) * 100).toFixed(0) + ' %'
+              - var total_carbsDV = ((food.total_carbs_i / 300) * 100).toFixed(0) + ' %'
+              - var diet_fiberDV = ((food.diet_fiber_i / 25) * 100).toFixed(0) + ' %'
+              .modal(id="i#{food.ingredient_ID}")
+                .modal-background
+                .modal-card
+                  header.modal-card-head
+                    p2.modal-card-title #{food.ingredient_name}
+                    button.delete(onclick='CloseInfo(#{food.ingredient_ID},3)')
+                  .modal-card-body
+                    section.performance-facts.xl
+                      header.performance-facts__header
+                        h1.performance-facts__title Nutrition Facts
+                      table.performance-facts__table
+                        thead
+                          tr
+                            th.small-info(colspan='3')
+                              | Amount Per Serving
+                        tbody
+                          tr
+                            th(colspan='2')
+                              b Calories
+                              |           
+                              a.font-black=food.calories_i
+                            td
+                              | Calories from Fat
+                              | 
+                              a.font-black=food.fat_calories_i
+                          tr.thick-row
+                            td.small-info(colspan='3')
+                              b % Daily Value*
+                          tr
+                            th(colspan='2')
+                              b Total Fat
+                              |          
+                              a.font-black=food.total_fat_i
+                              a.font-black g
+                            td
+                              b=total_fatDV
+                          tr
+                            td.blank-cell
+                            th
+                              | Saturated Fat
+                              | 
+                              a.font-black=food.sat_fat_i
+                              a.font-black g
+                            td
+                              b=sat_fatDV
+                          tr
+                            td.blank-cell
+                            th
+                              | Trans Fat
+                              | 
+                              a.font-black=food.trans_fat_i
+                              a.font-black g
+                            td
+                          tr
+                            th(colspan='2')
+                              b Cholesterol
+                              |           
+                              a.font-black=food.cholesterol_i
+                              a.font-black mg
+                            td
+                              b=cholesterolDV
+                          tr
+                            th(colspan='2')
+                              b Sodium
+                              |           
+                              a.font-black=food.sodium_i
+                              a.font-black mg
+                            td
+                              b=sodiumDV
+                          tr
+                            th(colspan='2')
+                              b Total Carbohydrate
+                              |           
+                              a.font-black=food.total_carbs_i
+                              a.font-black g
+                            td
+                              b=total_carbsDV
+                          tr
+                            td.blank-cell
+                            th
+                              | Dietary Fiber
+                              | 
+                              a.font-black=food.diet_fiber_i
+                              a.font-black g
+                            td
+                              b=diet_fiberDV
+                          tr
+                            td.blank-cell
+                            th
+                              | Sugars
+                              | 
+                              a.font-black=food.sugars_i
+                              a.font-black g
+                            td
+                          tr.thick-end
+                            th(colspan='2')
+                              b Protein
+                              |           
+                              a.font-black=food.protein_i
+                              a.font-black g
+                            td
+                      table.performance-facts__table--grid
+                        tbody
+                          tr
+                            td(colspan='2')
+                              | Vitamin A
+                              | N/A
+                            td
+                              | Vitamin C
+                              | N/A
+                          tr.thin-end
+                            td(colspan='2')
+                              | Calcium
+                              | N/A
+                            td
+                              | Iron
+                              | N/A
+                      p2.small-info
+                        | * Percent Daily Values are based on a 2,000 calorie diet. Your daily values may be higher or lower depending on your calorie needs:
+                      table.performance-facts__table--small.small-info
+                        thead
+                          tr
+                            td(colspan='2')
+                            th Calories:
+                            th 2,000
+                            th 2,500
+                        tbody
+                          tr
+                            th(colspan='2') Total Fat
+                            td Less than
+                            td 65g
+                            td 80g
+                          tr
+                            td.blank-cell
+                            th Saturated Fat
+                            td Less than
+                            td 20g
+                            td 25g
+                          tr
+                            th(colspan='2') Cholesterol
+                            td Less than
+                            td 300mg
+                            td 300 mg
+                          tr
+                            th(colspan='2') Sodium
+                            td Less than
+                            td 2,400mg
+                            td 2,400mg
+                          tr
+                            th(colspan='3') Total Carbohydrate
+                            td 300g
+                            td 375g
+                          tr
+                            td.blank-cell
+                            th(colspan='2') Dietary Fiber
+                            td 25g
+                            td 30g
+                      p2.small-info
+                        | Calories per gram:
+                      p2.small-info.text-center
+                        | Fat 9
+                        | •
+                        | Carbohydrate 4
+                        | •
+                        | Protein 4
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                    br
+                  footer.modal-card-foot
+                    a.button.is-large.is-fullwidth.is-info(onclick='CloseInfo(#{food.ingredient_ID},3)')
+                      span.icon.is-medium
+                        i.fas.fa-info-circle
+                      span Ok
+
+
+    script(src="/javascripts/dbcontrol.js")
